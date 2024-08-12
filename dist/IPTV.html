@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>IPTV Test</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #ffffff;
+                margin: 0;
+                padding: 20px;
+            }
+
+            h1 {
+                color: #333;
+                text-align: center;
+            }
+
+            table {
+                width: 100%;
+                margin: 0 auto;
+                border-collapse: collapse;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                background-color: #fff;
+            }
+
+            th,
+            td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            th {
+                background-color: #4caf50;
+                color: white;
+                text-transform: uppercase;
+            }
+
+            tr:hover {
+                background-color: #f1f1f1;
+            }
+
+            @media (max-width: 768px) {
+                table {
+                    width: 100%;
+                }
+
+                th,
+                td {
+                    padding: 10px;
+                }
+            }
+
+            .center {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .p1_center {
+                font-family: 'Monaco', 'Courier New', monospace;
+                font-size: 40px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="index.html">CPE - LAB</a>
+            <!-- Navbar Search-->
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"><div class="input-group"></div></form>
+            <!-- Navbar-->
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Test Case</div>
+                            <a class="nav-link" href="PingTest.html">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-check" style="color: #74c0fc"></i></div>
+                                Ping Test
+                            </a>
+                            <a class="nav-link" href="IPTV.html">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-check" style="color: #74c0fc"></i></div>
+                                IPTV
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">IPTV Test</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">IPTV Test</li>
+                        </ol>
+                        <div class="container-fluid px-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h2>Run test</h2>
+                                    <div id="apiResults" style="margin-top: 20px">
+                                        <form id="ping-form">
+                                            <div class="mb-3">
+                                                <div class="form-group">
+                                                    <label for="device">Device</label>
+                                                    <input class="form-control" id="device" type="text" placeholder="Enter the device hostname" />
+                                                </div>
+                                                <br />
+                                                <button class="btn btn-primary" type="submit">IPTV Test</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border p-3" style="height: 500px">
+                                        <h2>IPTV Test Results</h2>
+                                        <div id="loading">
+                                            <img class="center" autoplay loop width="300" height="300" src="https://media.giphy.com/media/sSgvbe1m3n93G/giphy.gif?cid=790b76117y4fxqvton3bcf6czbjqllx2g26p3dzafsxoc2a1&amp;ep=v1_gifs_search&amp;rid=giphy.gif&amp;ct=g" />
+                                            <p class="p1_center">Your Proccess is running!!!</p>
+                                            <p class="p1_center">Please wait...</p>
+                                        </div>
+                                        <table id="pingDataTable">
+                                            <thead>
+                                                <tr id="tableHeader"><!-- Headers will be populated by JavaScript--></tr>
+                                            </thead>
+                                            <tbody id="tableBody"><!-- Data rows will be populated by JavaScript--></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+                    <script src="assets/demo/chart-area-demo.js"></script>
+                    <script src="assets/demo/chart-bar-demo.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+                    <script src="js/datatables-simple-demo.js"></script>
+                    <script>
+                        let lastJSON = null;
+                        let intervalID = null;
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('ping-form').addEventListener('submit', async (event) => {
+                            event.preventDefault();
+                            //clear table
+                            tableHeader.innerHTML = '';
+                            tableBody.innerHTML = '';
+                            // Show the loading gif
+                            document.getElementById('loading').style.display = 'block';
+                            // Start the interval to fetch ping data every 1 second
+                            intervalID = setInterval(fetchPingData, 1000);
+                            try {
+                                const response = await fetch('http://192.168.36.183:3000/requestiptv');
+                                const data = await response.json();
+                                const resultsContainer = document.getElementById('apiResults');
+                                resultsContainer.innerHTML = '';
+                                data.forEach((item) => {
+                                    const itemDiv = document.createElement('div');
+                                    itemDiv.innerHTML = `<strong>Domain:</strong> ${item.domain} - <strong>Status:</strong> ${item.status}`;
+                                    resultsContainer.appendChild(itemDiv);
+                                });
+                            } catch (error) {
+                                console.error('Error:', error);
+                            }
+                        });
+
+                        // Function to fetch data from the API and populate the table
+                        async function fetchPingData() {
+                            try {
+                                const response = await fetch('http://192.168.36.183:3000/pingdata');
+                                const data = await response.json();
+                                if (JSON.stringify(data) !== JSON.stringify(lastJSON)) {
+                                    lastJSON = data;
+                                    // Populate the table
+                                    populateTable(data);
+                                    // Hide the loading gif
+                                    document.getElementById('loading').style.display = 'none';
+                                    // Clear the interval
+                                    clearInterval(intervalID);
+                                } else {
+                                    // Show the loading gif if nothing new
+                                    document.getElementById('loading').style.display = 'block';
+                                }
+                            } catch (error) {
+                                console.error('Error fetching data:', error);
+                            }
+                        }
+
+                        // Function to populate the table with data
+                        function populateTable(data) {
+                            const tableHeader = document.getElementById('tableHeader');
+                            const tableBody = document.getElementById('tableBody');
+                            // Clear existing table headers and body
+                            tableHeader.innerHTML = '';
+                            tableBody.innerHTML = '';
+                            // Assuming the JSON is an array of objects
+                            if (data.length > 0) {
+                                // Create table headers excluding 'ID'
+                                const headers = Object.keys(data[0]).filter((header) => header !== '_id' && header !== '__v');
+                                headers.forEach((header) => {
+                                    const th = document.createElement('th');
+                                    th.textContent = header;
+                                    tableHeader.appendChild(th);
+                                });
+                                // Create table rows
+                                data.forEach((item) => {
+                                    const tr = document.createElement('tr');
+                                    headers.forEach((header) => {
+                                        const td = document.createElement('td');
+                                        td.textContent = item[header];
+                                        tr.appendChild(td);
+                                    });
+                                    tableBody.appendChild(tr);
+                                });
+                            }
+                        }
+                    </script>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small"><div class="text-muted">Copyright &copy; CPE - LAB</div></div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+    </body>
+</html>

@@ -1,0 +1,90 @@
+doctype html
+
+block config
+    - var pageTitle = "Page Title"
+
+html(lang='en')
+
+    head
+
+        include includes/head/meta.pug
+        include includes/head/title.pug
+        include includes/head/css.pug
+        include includes/head/icons.pug
+        style.
+            body {
+            font-family: Arial, sans-serif;
+            background-color: #FFFFFF;
+            margin: 0;
+            padding: 20px;
+            }
+            
+            h1 {
+            color: #333;
+            text-align: center;
+            }
+            
+            table {
+            width: 100%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: #fff;
+            }
+            
+            th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            }
+            
+            th {
+            background-color: #4CAF50;
+            color: white;
+            text-transform: uppercase;
+            }
+            
+            tr:hover {
+            background-color: #f1f1f1;
+            }
+            
+            @media (max-width: 768px) {
+            table {
+            width: 100%;
+            }
+            
+            th, td {
+            padding: 10px;
+            }
+            }
+
+            .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            }
+            .p1_center{
+            font-family: "Monaco", "Courier New", monospace;
+            font-size: 40px;
+            text-align: center;
+            }
+
+    body(class=bodyClass)
+
+        include includes/navigation/topnav.pug
+
+        #layoutSidenav
+            
+            #layoutSidenav_nav
+
+                include includes/navigation/sidenav.pug
+
+            #layoutSidenav_content
+                
+                main
+
+                    block content
+                    
+                include includes/footer.pug
+
+        include includes/scripts.pug

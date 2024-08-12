@@ -1,0 +1,179 @@
+extends ../layouts/dashboard.pug
+
+block config
+    - var bodyClass = 'sb-nav-fixed'
+    - var pageTitle = 'Ping Test';
+    - var index = true;
+    - var sidenavStyle = 'sb-sidenav-dark'
+ 
+prepend css
+    //- Load Simple DataTables Stylesheet
+    link(href='https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css', rel='stylesheet')
+
+block content
+    .container-fluid.px-4
+        include includes/page-header.pug
+        .container-fluid.px-4
+            .row
+                .col-md-4
+                    h2 Run test
+                    #apiResults(style="margin-top: 20px")
+                        form#ping-form
+                            .mb-3
+                                button.btn.btn-primary(type="submit") Ping Test
+                .col-md-6
+                    //- .border.p-3(id = "result", style="height: 500px")
+                    h2 Ping Test Results
+                    #loading
+                        //- img(autoplay, loop, width="400",height="400", src="/Users/annguyen/Desktop/FPT/Project/Monitor_Pi/FrontEnd/Please wait.mp4")
+                        //- img(autoplay, loop, width="400",height="400", class="center", src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fbser-exam.in%2Findex.php%2Fboard-admin%2Flogin&psig=AOvVaw0_PWfuLbYQjyUCfXcylcTU&ust=1719568599066000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPjjjbDC-4YDFQAAAAAdAAAAABAE")
+                        img(autoplay, loop, width="300",height="300", class="center", src="https://media.giphy.com/media/sSgvbe1m3n93G/giphy.gif?cid=790b76117y4fxqvton3bcf6czbjqllx2g26p3dzafsxoc2a1&ep=v1_gifs_search&rid=giphy.gif&ct=g")
+                        p(class="p1_center") Your Proccess is running!!!
+                        p(class="p1_center") Please wait...
+                        //- img(src="img/Processing.gif", alt="Processing...", style="width:100px;height:100px;")
+                    table#pingDataTable
+                        thead
+                            tr#tableHeader
+                                // Headers will be populated by JavaScript
+                        tbody#tableBody
+                            // Data rows will be populated by JavaScript
+    append scripts
+    //- Load Chart.js and demos
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js', crossorigin='anonymous')
+    script(src='assets/demo/chart-area-demo.js')
+    script(src='assets/demo/chart-bar-demo.js')
+    //- Load Simple DataTables Scripts
+    script(src='https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js', crossorigin='anonymous')
+    script(src='js/datatables-simple-demo.js')
+    script.
+        // Assuming this function is being called on page load or some event
+        let lastJSON = [];
+        fetchPingData(); // Fetch data every 5 seconds
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('ping-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            //clear table
+            tableHeader.innerHTML = '';
+            tableBody.innerHTML = '';
+            // Show the loading gif
+            document.getElementById('loading').style.display = 'block';
+            // Start the interval to fetch ping data every 20 second
+            intervalID = setInterval(fetchPingData, 20000);
+            try {
+                const response = await fetch('http://192.168.36.183:3000/execute');
+                const data = await response.json();
+                const resultsContainer = document.getElementById('apiResults');
+                //- resultsContainer.innerHTML = '';
+                //- data.forEach((item) => {
+                //-     const itemDiv = document.createElement('div');
+                //-     itemDiv.innerHTML = `<strong>Domain:</strong> ${item.domain} - <strong>Status:</strong> ${item.status}`;
+                //-     resultsContainer.appendChild(itemDiv);
+                //- });
+                //- data.forEach((item) =>{
+                //-     document.getElementById('results').innerText = JSON.stringify(data, null, 2);
+                //- });
+            }
+            catch (error) {
+                console.error('Error:', error);
+            }
+        });
+        
+        // Function to fetch data from the API and populate the table
+        async function fetchPingData() {
+            try {
+                const response = await fetch('http://192.168.36.183:9200/ping_domain/_search?scroll=1m&size=1000');
+                const elasticsearchData = await response.json();
+
+                // Extracting the hits from Elasticsearch response
+                const data = elasticsearchData.hits.hits.map(hit => hit._source);
+
+                if (JSON.stringify(data) !== JSON.stringify(lastJSON)) {
+                    lastJSON = data;
+                    // Get the newest data for each unique name
+                    const newestDataByHost = getNewestDataByHost(data);
+                    // Populate the table
+                    populateTable(newestDataByHost);
+                    // Hide the loading gif
+                    document.getElementById('loading').style.display = 'none';
+                    // Clear the interval
+                    clearInterval(intervalID);
+                } else {
+                    // Show the loading gif if nothing new
+                    document.getElementById('loading').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Function to get the newest data for each unique host
+        function getNewestDataByHost(data) {
+            const newestDataByHost = {};
+            data.forEach(item => {
+                const host = item.host;
+                if (!newestDataByHost[host] || new Date(item['@timestamp']) > new Date(newestDataByHost[host]['@timestamp'])) {
+                    newestDataByHost[host] = item;
+                }
+            });
+            return Object.values(newestDataByHost);
+        }
+
+        // Function to format the timestamp to 'MMM dd, yyyy @ HH:mm:ss.SSS' in UTC+7
+        function formatTimestampToUTC7(timestamp) {
+            const date = new Date(timestamp);
+            const utc7Offset = 7 * 60 * 60 * 1000;
+            const localTime = new Date(date.getTime() + utc7Offset);
+
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const month = months[localTime.getUTCMonth()];
+            const day = String(localTime.getUTCDate()).padStart(2, '0');
+            const year = localTime.getUTCFullYear();
+            const hours = String(localTime.getUTCHours()).padStart(2, '0');
+            const minutes = String(localTime.getUTCMinutes()).padStart(2, '0');
+            const seconds = String(localTime.getUTCSeconds()).padStart(2, '0');
+            const milliseconds = String(localTime.getUTCMilliseconds()).padStart(3, '0');
+
+            return `${month} ${day}, ${year} - ${hours}:${minutes}:${seconds}.${milliseconds}`;
+        }
+
+        // Function to populate the table with latest data
+        function populateTable(data) {
+            const tableHeader = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+
+            // Clear existing table headers and body
+            tableHeader.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            // Create table headers for the required fields
+            const headers = ['@timestamp', 'name', 'host', 'domain', 'avg', 'min', 'max', 'mdev', 'packet_loss', 'status'];
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header.toUpperCase();
+                tableHeader.appendChild(th);
+            });
+
+            // Create table rows for the latest data
+            data.forEach(item => {
+                item.data.forEach(dataItem => {
+                    const tr = document.createElement('tr');
+                    headers.forEach(header => {
+                        const td = document.createElement('td');
+                        if (header === '@timestamp') {
+                            td.textContent = formatTimestampToUTC7(item[header]);
+                        } else if (header === 'host') {
+                            td.textContent = item[header];
+                        } else {
+                            td.textContent = dataItem[header];
+                        }
+                        tr.appendChild(td);
+                    });
+                    tableBody.appendChild(tr);
+                });
+            });
+        }
+
+
+        //- // Assuming this function is being called on page load or some event
+        //- let lastJSON = [];
+        //- let intervalID = setInterval(fetchPingData, 1000); // Fetch data every 5 seconds

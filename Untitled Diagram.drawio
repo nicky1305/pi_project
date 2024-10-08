@@ -85,6 +85,24 @@
         <mxCell id="XB9vf3TUTmff6KcdeBLE-29" value="AP/ONT Test" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="1020" y="567.5" width="80" height="30" as="geometry" />
         </mxCell>
+        <mxCell id="XB9vf3TUTmff6KcdeBLE-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="XB9vf3TUTmff6KcdeBLE-30" target="XB9vf3TUTmff6KcdeBLE-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XB9vf3TUTmff6KcdeBLE-30" value="Rasp pi 3" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="620" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="XB9vf3TUTmff6KcdeBLE-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="XB9vf3TUTmff6KcdeBLE-31" target="XB9vf3TUTmff6KcdeBLE-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XB9vf3TUTmff6KcdeBLE-31" value="Rasp pi 1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="-220" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="XB9vf3TUTmff6KcdeBLE-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="XB9vf3TUTmff6KcdeBLE-32" target="XB9vf3TUTmff6KcdeBLE-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XB9vf3TUTmff6KcdeBLE-32" value="Rasp pi 2" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="200" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
